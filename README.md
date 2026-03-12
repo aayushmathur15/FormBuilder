@@ -28,6 +28,9 @@ A scalable backend for a no-code dynamic form builder web application using **No
 
 ### Admin (Form Management)
 
+These routes are protected with JWT-based admin authentication.
+
+- `POST /api/auth/login` - Exchange admin credentials for a JWT token
 - `POST /api/forms` - Create a new form
 - `GET /api/forms` - Get all forms
 - `GET /api/forms/:id` - Get a single form

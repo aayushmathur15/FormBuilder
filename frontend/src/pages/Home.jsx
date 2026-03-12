@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { getForms, deleteForm, duplicateForm } from '../services/api'
+import { useAuth } from '../contexts/AuthContext'
 import FormList from '../components/FormList'
 
 export default function Home() {
+  const { isAuthenticated } = useAuth()
   const [forms, setForms] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
@@ -54,18 +56,33 @@ export default function Home() {
           <p className="text-sm text-slate-500">Manage your form templates and view submissions.</p>
         </div>
 
-        <Link
-          className="rounded-lg bg-brand-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-brand-700"
-          to="/create"
-        >
-          Create New Form
-        </Link>
+        {isAuthenticated ? (
+          <Link
+            className="rounded-lg bg-brand-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-brand-700"
+            to="/create"
+          >
+            Create New Form
+          </Link>
+        ) : (
+          <p className="text-sm text-slate-500">
+            <Link className="font-semibold text-brand-600 hover:underline" to="/login">
+              Log in
+            </Link>{' '}
+            to manage forms.
+          </p>
+        )}
       </header>
 
       {loading && <p className="text-slate-500">Loading forms…</p>}
       {error && <p className="rounded-lg bg-red-50 px-4 py-3 text-sm font-medium text-red-700">{error}</p>}
 
-      {!loading && <FormList forms={forms} onDelete={handleDelete} onDuplicate={handleDuplicate} />}
+      {!loading && (
+        <FormList
+          forms={forms}
+          onDelete={isAuthenticated ? handleDelete : undefined}
+          onDuplicate={isAuthenticated ? handleDuplicate : undefined}
+        />
+      )}
     </div>
   )
 }
