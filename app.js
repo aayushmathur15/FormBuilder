@@ -1,11 +1,18 @@
 const express = require('express');
 const morgan = require('morgan');
+const cors = require('cors');
 
 const formRoutes = require('./routes/form.routes');
 const publicRoutes = require('./routes/public.routes');
 const { notFound, errorHandler } = require('./middlewares/error.middleware');
 
 const app = express();
+
+app.use(cors({
+  origin: process.env.CORS_ORIGIN || '*',
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+}));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
